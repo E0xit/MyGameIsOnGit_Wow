@@ -1,0 +1,293 @@
+[gd_scene format=3 uid="uid://c54lcsbgts4eu"]
+
+[ext_resource type="SpriteFrames" uid="uid://4ojfjwdif6yh" path="res://Material/SpriteFrame/Office.tres" id="1_q6iex"]
+[ext_resource type="Script" uid="uid://b4dpb16c38xlk" path="res://Script/OfficeAnimationHandler.cs" id="2_0lxte"]
+[ext_resource type="Script" uid="uid://bjjrcs64y824q" path="res://Script/Enemy/Yume.cs" id="2_0qtgj"]
+[ext_resource type="Script" uid="uid://colvkfbastlw4" path="res://Script/UIHandler.cs" id="3_0lxte"]
+[ext_resource type="Script" uid="uid://ytvweklpo2lj" path="res://Script/FlashlightManager.cs" id="4_6vyxd"]
+[ext_resource type="Script" uid="uid://bnakdcjo0v3gy" path="res://Script/Enemy/HappyBear.cs" id="4_d60t8"]
+[ext_resource type="SpriteFrames" uid="uid://bv5r7mxlb57no" path="res://Material/SpriteFrame/Jumpscare.tres" id="4_pbin4"]
+[ext_resource type="SpriteFrames" uid="uid://cg2jv18uqg7mf" path="res://Material/SpriteFrame/Vent.tres" id="4_shn0w"]
+[ext_resource type="Script" uid="uid://o3qopcvnuico" path="res://Script/DebugUi.cs" id="7_5nxkn"]
+[ext_resource type="Texture2D" uid="uid://bge6anldmajre" path="res://Images/Idle/MonitorOn.png" id="7_d60t8"]
+[ext_resource type="Script" uid="uid://bsvby4l74mhor" path="res://Script/JumpscareHandler.cs" id="8_hak2i"]
+[ext_resource type="Script" uid="uid://y1sxncw3uqtx" path="res://Scene/ComputerSystem.cs" id="8_lumd5"]
+[ext_resource type="FontFile" uid="uid://bgnb60pelcnlq" path="res://Fonts/VT323/VT323-Regular.ttf" id="8_qu0eo"]
+
+[sub_resource type="PrismMesh" id="PrismMesh_5ba87"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_qu0eo"]
+font = ExtResource("8_qu0eo")
+font_size = 55
+
+[sub_resource type="LabelSettings" id="LabelSettings_lumd5"]
+font = ExtResource("8_qu0eo")
+font_size = 55
+
+[sub_resource type="LabelSettings" id="LabelSettings_k7ogi"]
+font = ExtResource("8_qu0eo")
+font_size = 35
+
+[sub_resource type="LabelSettings" id="LabelSettings_r1l2u"]
+font_size = 41
+
+[node name="Gameplay" type="Node2D" unique_id=1780811747]
+
+[node name="ScriptHolder" type="Node" parent="." unique_id=604220149]
+
+[node name="OfficeAnimHandler" type="Node" parent="ScriptHolder" unique_id=2053058120 node_paths=PackedStringArray("officeAnimPlayer", "officeControlUI")]
+script = ExtResource("2_0lxte")
+officeAnimPlayer = NodePath("../../OfficeAnimPlayer")
+officeControlUI = NodePath("../../MainUI/OfficeControlUI")
+
+[node name="EnemyManager" type="Node" parent="ScriptHolder" unique_id=1048178296]
+
+[node name="Yume" type="Node" parent="ScriptHolder/EnemyManager" unique_id=291272331 node_paths=PackedStringArray("office")]
+script = ExtResource("2_0qtgj")
+office = NodePath("../../OfficeAnimHandler")
+
+[node name="YumeTimer" type="Timer" parent="ScriptHolder/EnemyManager/Yume" unique_id=1230016087]
+wait_time = 20.0
+one_shot = true
+
+[node name="HappyBear" type="Node" parent="ScriptHolder/EnemyManager" unique_id=1277910942 node_paths=PackedStringArray("office")]
+script = ExtResource("4_d60t8")
+office = NodePath("../../OfficeAnimHandler")
+
+[node name="HappyBearTimer" type="Timer" parent="ScriptHolder/EnemyManager/HappyBear" unique_id=1179413388]
+wait_time = 20.0
+one_shot = true
+
+[node name="FlashlightManager" type="Node" parent="ScriptHolder" unique_id=422224152 node_paths=PackedStringArray("flashButton", "UI", "office", "ventAnimPlayer", "enemies", "jumpscare")]
+script = ExtResource("4_6vyxd")
+flashButton = NodePath("../../MainUI/OfficeControlUI/FlashButton")
+UI = NodePath("../../MainUI/OfficeControlUI")
+office = NodePath("../OfficeAnimHandler")
+ventAnimPlayer = NodePath("../../VentAnim")
+enemies = [NodePath("../EnemyManager/Yume"), NodePath("../EnemyManager/HappyBear")]
+jumpscare = NodePath("../../JumpscareHandler")
+
+[node name="FlashlightCooldown" type="Timer" parent="ScriptHolder/FlashlightManager" unique_id=1263581579]
+wait_time = 2.0
+one_shot = true
+
+[node name="VentAnim" type="AnimatedSprite2D" parent="." unique_id=2116026104]
+position = Vector2(1.7454376, -4.7683716e-06)
+scale = Vector2(1.0351515, 1.037037)
+sprite_frames = ExtResource("4_shn0w")
+animation = &"PitchBlack"
+
+[node name="OfficeAnimPlayer" type="AnimatedSprite2D" parent="." unique_id=1404089497]
+position = Vector2(-2.670288e-05, 1.9073486e-06)
+scale = Vector2(1.0333333, 1.0333333)
+sprite_frames = ExtResource("1_q6iex")
+animation = &"OfficeIdle"
+
+[node name="MonitorOn" type="Sprite2D" parent="OfficeAnimPlayer" unique_id=1113271991]
+scale = Vector2(0.99999994, 0.99999994)
+texture = ExtResource("7_d60t8")
+
+[node name="MonitorUI" type="Control" parent="OfficeAnimPlayer/MonitorOn" unique_id=1669971055 node_paths=PackedStringArray("modeDisplay", "next", "previous")]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("8_lumd5")
+modeDisplay = NodePath("Display/Mode")
+next = NodePath("Input/Next")
+previous = NodePath("Input/Previous")
+
+[node name="Display" type="Node2D" parent="OfficeAnimPlayer/MonitorOn/MonitorUI" unique_id=7389945]
+scale = Vector2(0.99999994, 0.99999994)
+
+[node name="LeftPanel" type="MeshInstance2D" parent="OfficeAnimPlayer/MonitorOn/MonitorUI/Display" unique_id=1387238489]
+position = Vector2(-332.90326, -214.921)
+rotation = 1.5707964
+scale = Vector2(50.156998, 38.709682)
+mesh = SubResource("PrismMesh_5ba87")
+
+[node name="RightPanel" type="MeshInstance2D" parent="OfficeAnimPlayer/MonitorOn/MonitorUI/Display" unique_id=536172691]
+position = Vector2(-38.709663, -214.92152)
+rotation = -1.5707964
+scale = Vector2(50.157, 38.709686)
+mesh = SubResource("PrismMesh_5ba87")
+
+[node name="OS" type="Label" parent="OfficeAnimPlayer/MonitorOn/MonitorUI/Display" unique_id=1019640164]
+offset_left = 77.41939
+offset_top = -255.48392
+offset_right = 371.6129
+offset_bottom = -193.54843
+text = "Aunx0.5A OS"
+label_settings = SubResource("LabelSettings_qu0eo")
+horizontal_alignment = 2
+uppercase = true
+
+[node name="Status" type="Label" parent="OfficeAnimPlayer/MonitorOn/MonitorUI/Display" unique_id=175775129]
+offset_left = -309.67746
+offset_top = -46.451622
+offset_right = 247.74197
+offset_bottom = 15.483868
+text = "music status: playing"
+label_settings = SubResource("LabelSettings_lumd5")
+horizontal_alignment = 1
+uppercase = true
+
+[node name="Mode" type="Label" parent="OfficeAnimPlayer/MonitorOn/MonitorUI/Display" unique_id=278281793]
+offset_left = -301.93552
+offset_top = -232.25813
+offset_right = -69.677444
+offset_bottom = -197.25813
+text = "Music Box"
+label_settings = SubResource("LabelSettings_k7ogi")
+horizontal_alignment = 1
+uppercase = true
+
+[node name="Input" type="Node2D" parent="OfficeAnimPlayer/MonitorOn/MonitorUI" unique_id=223534381]
+
+[node name="Previous" type="Button" parent="OfficeAnimPlayer/MonitorOn/MonitorUI/Input" unique_id=1147022362]
+offset_left = -371.61295
+offset_top = -263.22583
+offset_right = -286.4516
+offset_bottom = -170.3226
+
+[node name="Next" type="Button" parent="OfficeAnimPlayer/MonitorOn/MonitorUI/Input" unique_id=1672629511]
+offset_left = -85.16128
+offset_top = -263.22583
+offset_right = 3.8146973e-05
+offset_bottom = -170.32263
+
+[node name="LeftButton" type="Button" parent="OfficeAnimPlayer/MonitorOn/MonitorUI/Input" unique_id=1305098171]
+offset_left = -309.67743
+offset_top = 92.90324
+offset_right = -30.967712
+offset_bottom = 185.8065
+
+[node name="RightButton" type="Button" parent="OfficeAnimPlayer/MonitorOn/MonitorUI/Input" unique_id=295281990]
+offset_left = 30.967772
+offset_top = 92.903244
+offset_right = 309.67755
+offset_bottom = 185.80649
+
+[node name="JumpscareHandler" type="AnimatedSprite2D" parent="." unique_id=1419359435 node_paths=PackedStringArray("UI", "timer")]
+position = Vector2(2.2172928e-05, -2.6826507e-05)
+scale = Vector2(1.0333333, 1.037037)
+sprite_frames = ExtResource("4_pbin4")
+animation = &"None"
+script = ExtResource("8_hak2i")
+UI = NodePath("../MainUI")
+timer = NodePath("EndTimer")
+
+[node name="EndTimer" type="Timer" parent="JumpscareHandler" unique_id=106838137]
+one_shot = true
+
+[node name="PlayerCam" type="Camera2D" parent="." unique_id=1147955203]
+
+[node name="MainUI" type="CanvasLayer" parent="." unique_id=1692989266]
+
+[node name="OfficeControlUI" type="Node2D" parent="MainUI" unique_id=137118208 node_paths=PackedStringArray("officeAnimationHandler", "leftBar", "rightBar")]
+visible = false
+script = ExtResource("3_0lxte")
+officeAnimationHandler = NodePath("../../ScriptHolder/OfficeAnimHandler")
+leftBar = NodePath("LeftBar")
+rightBar = NodePath("RightBar")
+
+[node name="LeftBar" type="Panel" parent="MainUI/OfficeControlUI" unique_id=615591790]
+modulate = Color(18.892157, 18.892157, 18.892157, 1)
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 64.0
+offset_top = 128.0
+offset_right = 128.0
+offset_bottom = 960.0
+grow_vertical = 2
+
+[node name="RightBar" type="Panel" parent="MainUI/OfficeControlUI" unique_id=1722977411]
+modulate = Color(18.892157, 18.892157, 18.892157, 1)
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 1856.0
+offset_top = 128.0
+offset_right = 1920.0
+offset_bottom = 960.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="FlashButton" type="Button" parent="MainUI/OfficeControlUI" unique_id=1640670133]
+modulate = Color(1, 1, 1, 0)
+self_modulate = Color(1, 1, 1, 0)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 320.0
+offset_top = 128.0
+offset_right = 1664.0
+offset_bottom = 1024.0
+grow_horizontal = 2
+grow_vertical = 2
+action_mode = 0
+
+[node name="DebugUI" type="Node2D" parent="MainUI" unique_id=1879591264 node_paths=PackedStringArray("officeAnim", "flashlight", "enemies")]
+visible = false
+script = ExtResource("7_5nxkn")
+officeAnim = NodePath("../../ScriptHolder/OfficeAnimHandler")
+flashlight = NodePath("../../ScriptHolder/FlashlightManager")
+enemies = [NodePath("../../ScriptHolder/EnemyManager/Yume"), NodePath("../../ScriptHolder/EnemyManager/HappyBear")]
+
+[node name="Label" type="Label" parent="MainUI/DebugUI" unique_id=1295665945]
+offset_left = 64.0
+offset_right = 512.0
+offset_bottom = 64.0
+text = "State = "
+label_settings = SubResource("LabelSettings_r1l2u")
+
+[node name="Label2" type="Label" parent="MainUI/DebugUI" unique_id=1362860949]
+offset_left = 64.0
+offset_top = 64.0
+offset_right = 512.0
+offset_bottom = 128.0
+text = "State = "
+label_settings = SubResource("LabelSettings_r1l2u")
+
+[node name="Label3" type="Label" parent="MainUI/DebugUI" unique_id=540755301]
+offset_left = 64.0
+offset_top = 128.0
+offset_right = 512.0
+offset_bottom = 192.0
+text = "State = "
+label_settings = SubResource("LabelSettings_r1l2u")
+
+[node name="Label4" type="Label" parent="MainUI/DebugUI" unique_id=490638249]
+offset_left = 64.0
+offset_top = 192.0
+offset_right = 512.0
+offset_bottom = 256.0
+text = "State = "
+label_settings = SubResource("LabelSettings_r1l2u")
+
+[node name="Label5" type="Label" parent="MainUI/DebugUI" unique_id=586469700]
+offset_left = 64.0
+offset_top = 256.0
+offset_right = 512.0
+offset_bottom = 320.0
+text = "State = "
+label_settings = SubResource("LabelSettings_r1l2u")
+
+[node name="Label6" type="Label" parent="MainUI/DebugUI" unique_id=821474393]
+offset_left = 64.0
+offset_top = 320.0
+offset_right = 512.0
+offset_bottom = 384.0
+text = "State = "
+label_settings = SubResource("LabelSettings_r1l2u")
+
+[node name="Label7" type="Label" parent="MainUI/DebugUI" unique_id=763909907]
+offset_left = 64.0
+offset_top = 384.0
+offset_right = 512.0
+offset_bottom = 448.0
+text = "State = "
+label_settings = SubResource("LabelSettings_r1l2u")
